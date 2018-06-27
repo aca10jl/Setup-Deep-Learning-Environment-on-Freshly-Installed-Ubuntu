@@ -1,0 +1,73 @@
+## CUDA-9.0 on Ubuntu 18.04 LTS
+cd ~/Downloads
+wget https://developer.nvidia.com/compute/cuda/9.0/Prod/local_installers/cuda_9.0.176_384.81_linux-run
+chmod +x cuda_9.0.176_384.81_linux-run
+./cuda_9.0.176_384.81_linux-run --extract=~/Downloads
+sudo ./cuda-linux.9.0.176-22781540.run
+
+
+## set CUDA environment varibales
+echo 'export CUDA_HOME=/usr/local/cuda-9.0' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=${CUDA_HOME}/lib64' >> ~/.bashrc
+echo 'export PATH=${CUDA_HOME}/bin:${PATH}' >> ~/.bashrc
+source ~/.bashrc
+
+
+## validate CUDA
+# validate (1)
+nvcc -V
+# validate (2)
+function lib_installed() { /sbin/ldconfig -N -v $(sed 's/:/ /' <<< $LD_LIBRARY_PATH) 2>/dev/null | grep $1; }
+function check() { lib_installed $1 && echo "$1 is installed" || echo "ERROR: $1 is NOT installed"; }
+check libcuda
+check libcudart
+
+
+## cuDNN-7.0
+# Download cuDNN from official website: https://developer.nvidia.com/rdp/cudnn-archive
+tar -xzvf cuDNN.tgz
+sudo cp -P cuda/include/cudnn.h /usr/local/cuda-9.0/include
+sudo cp -P cuda/lib64/libcudnn* /usr/local/cuda-9.0/lib64/
+sudo chmod a+r /usr/local/cuda-9.0/lib64/libcudnn*
+
+
+## validate cuDNN
+# validate (1)
+cat /usr/local/cuda-9.0/include/cudnn.h | grep CUDNN_MAJOR -A 2
+# validate (2)
+function lib_installed() { /sbin/ldconfig -N -v $(sed 's/:/ /' <<< $LD_LIBRARY_PATH) 2>/dev/null | grep $1; }
+function check() { lib_installed $1 && echo "$1 is installed" || echo "ERROR: $1 is NOT installed"; }
+check libcudnn
+
+
+## install the latest NVIDIA graphics drivers on Ubuntu 18.04 LTS
+sudo apt-add-repository ppa:graphics-drivers/ppa
+sudo apt update
+sudo apt install nvidia-driver-396
+
+
+## restart system to apply the changes
+sudo reboot
+
+
+# validate GPU driver
+nvidia-smi
+
+
+## Python & pip
+sudo apt install python-pip python-dev -y
+sudo pip install --upgrade pip
+
+
+## TensorFlow
+sudo apt install libcupti-dev -y
+sudo pip install tensorflow-gpu
+
+
+## validate TensorFlow
+python -c 'import tensorflow as tf; print(tf.__version__)'
+
+
+## Pytorch
+sudo pip install torch torchvision
+
