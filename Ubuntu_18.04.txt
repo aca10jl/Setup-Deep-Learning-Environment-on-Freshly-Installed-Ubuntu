@@ -8,7 +8,7 @@ sudo ./cuda-linux.9.0.176-22781540.run
 
 ## set CUDA environment varibales
 echo 'export CUDA_HOME=/usr/local/cuda-9.0' >> ~/.bashrc
-echo 'export LD_LIBRARY_PATH=${CUDA_HOME}/lib64' >> ~/.bashrc
+echo 'export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}' >> ~/.bashrc
 echo 'export PATH=${CUDA_HOME}/bin:${PATH}' >> ~/.bashrc
 source ~/.bashrc
 
