@@ -1,0 +1,9 @@
+1. install the latest default version of nvidia driver (e.g. v390) from [Software & Updates] in the Ubuntu system
+2. download nvidia cuda deb installer
+	2.1. sudo dpkg -i cuda-repo-ubuntu1804_10.1.168-1_amd64.deb
+	2.2. sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
+	2.3. sudo apt-get update
+	2.4. sudo apt-get install cuda
+3. reboot
+4. get into Ubuntu recovery mode -> execute [clean] and [dkpg] function
+5. reboot
